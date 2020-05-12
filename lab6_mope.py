@@ -53,7 +53,12 @@ def get_value(table: dict, key: int):
         if type(i) == range and key in i:
             return table.get(i)
 
-def main(m, n):
+def main(m, n,setk):
+    if setk==1:
+        global ImpSum, kolvo
+        ImpSum=[0,0,0,0,0,0,0,0,0,0,0]
+        kolvo=[0,0,0,0,0,0,0,0,0,0,0]
+
     if n == 14:
         const_l = 1.73
         print(
@@ -210,7 +215,7 @@ def main(m, n):
         print(f"The variance is homogeneous: Gp = {g_p:.5} < Gt = {g_t}")
     else:
         print(f"The variance is not homogeneous Gp = {g_p:.5} > Gt = {g_t}\nStart again with m = m + 1 = {m + 1}")
-        return main(m=m + 1, n=n)
+        return main(m=m + 1, n=n,setk=setk)
 
     print("\n[ Student's test ]")
     s2_b = sum(s_i) / n
@@ -231,6 +236,9 @@ def main(m, n):
         if get_value(t_table, f_3) > t[i]:
             beta_i[i] = 0
             d -= 1
+        if get_value(t_table, f_3) < t[i]:
+            ImpSum[i]+=abs(beta_i[i])
+            kolvo[i]+=1
 
     if n == d:
         n = 8 if n == 4 else 14
@@ -299,9 +307,19 @@ def main(m, n):
         print(f"fp = {f_p} > ft = {get_value(f_t, f_3)[f_4]}.\n"
                 f"The mathematical model is not adequate to the experimental data\n"
                 f"Start again with m = {m} and n = {n}")
-        return main(m=m, n=n)
+        return main(m=m, n=n,setk=setk)
     else:
         print(f"fP = {f_p} < fT = {get_value(f_t, f_3)[f_4]}.\n"
                 f"The mathematical model is adequate to the experimental data\n")
+        if setk==2:
+                print( "Valuable variables ")
+                for i in range (len(ImpSum)):
+                    print (ImpSum[i]/kolvo[i])
 
-main(m=2, n=14)
+for i in range(100):
+    if i==0:
+        main(m=2, n=14,setk=1)
+    elif i==99:
+        main(m=2 ,n=14,setk=2)
+    else:
+        main(m=2,n=14,setk=0)
